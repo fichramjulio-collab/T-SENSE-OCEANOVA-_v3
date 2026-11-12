@@ -50,18 +50,18 @@
 
   <div id="dashboard" class="app hidden">
     <aside class="sidebar">
-      <div class="side-brand"><img src="assets/img/oceanova-logo-gelap.png" alt="OCEANOVA"></div>
+      <div class="side-top"><button id="navToggle" class="nav-toggle" type="button" aria-label="Buka atau tutup menu" aria-expanded="true"><span></span><span></span><span></span></button><div class="side-brand"><img src="assets/img/oceanova-logo-gelap.png" alt="OCEANOVA"></div></div>
       <div class="side-label">MONITORING CENTER</div>
       <nav>
-        <a class="nav-item active" href="#overview" data-view="overview"><i>◫</i> Overview</a>
-        <a class="nav-item" href="#gnss" data-view="gnss"><i>◎</i> GNSS Position</a>
-        <a class="nav-item" href="#water" data-view="water"><i>≈</i> Water Level</a>
-        <a class="nav-item" href="#tide" data-view="tide"><i>〰</i> Tidal Reference</a>
-        <a class="nav-item" href="#risk" data-view="risk"><i>△</i> Rob Indicators</a>
-        <a class="nav-item" href="#diagnostics" data-view="diagnostics"><i>⌁</i> Device Diagnostics</a>
-        <a class="nav-item" href="#data" data-view="data"><i>⇩</i> Data Management</a>
+        <a class="nav-item active" href="#overview" data-view="overview" title="Overview"><i>◫</i><span class="nav-text">Overview</span></a>
+        <a class="nav-item" href="#gnss" data-view="gnss" title="GNSS Position"><i>◎</i><span class="nav-text">GNSS Position</span></a>
+        <a class="nav-item" href="#water" data-view="water" title="Water Level"><i>≈</i><span class="nav-text">Water Level</span></a>
+        <a class="nav-item" href="#tide" data-view="tide" title="Tidal Reference"><i>〰</i><span class="nav-text">Tidal Reference</span></a>
+        <a class="nav-item" href="#risk" data-view="risk" title="Rob Indicators"><i>△</i><span class="nav-text">Rob Indicators</span></a>
+        <a class="nav-item" href="#diagnostics" data-view="diagnostics" title="Device Diagnostics"><i>⌁</i><span class="nav-text">Device Diagnostics</span></a>
+        <a class="nav-item" href="#data" data-view="data" title="Data Management"><i>⇩</i><span class="nav-text">Data Management</span></a>
         <div class="side-label nav-sep">AKUN</div>
-        <a class="nav-item" href="#profile" data-view="profile"><i>☺</i> Profil Saya</a>
+        <a class="nav-item" href="#profile" data-view="profile" title="Profil Saya"><i>☺</i><span class="nav-text">Profil Saya</span></a>
       </nav>
       <div class="side-bottom"><div class="online-dot"></div><span>Dashboard preview mode</span></div>
     </aside>
@@ -78,7 +78,7 @@
           <button id="logoutButton" class="btn outline small-btn">Keluar</button>
         </div>
       </header>
-      <section class="hello-row" data-page="overview">
+      <section class="hello-row">
         <div>
           <div class="crumb">T-SENSE · COASTAL EARLY INDICATION</div>
           <h2 class="hello">Halo, <span id="userName">Operator</span><em>✦</em></h2>
@@ -86,14 +86,14 @@
         </div>
         <div class="station-card"><span class="st-icon">⌖</span><div><small>STATION ID</small><b>T-SENSE-001</b></div><i class="st-dot"></i></div>
       </section>
-      <div class="sim-notice" data-page="overview"><b>ⓘ Data simulasi:</b> angka, koordinat, grafik, dan status perangkat pada halaman ini merupakan contoh antarmuka, bukan pengukuran langsung dari alat. Ambang rob dan elevasi muka air belum dikalibrasi.</div>
-      <section class="stat-grid" data-page="overview">
+      <div class="sim-notice"><b>ⓘ Data simulasi:</b> angka, koordinat, grafik, dan status perangkat pada halaman ini merupakan contoh antarmuka, bukan pengukuran langsung dari alat. Ambang rob dan elevasi muka air belum dikalibrasi.</div>
+      <section class="stat-grid">
         <article class="stat-card"><div class="stat-top"><span>JARAK SENSOR KE AIR</span><span class="stat-icon">↕</span></div><strong id="distanceValue">-- <small>cm</small></strong><p><span class="tiny-dot blue"></span> A01NYUB · pembacaan contoh</p></article>
         <article class="stat-card"><div class="stat-top"><span>PERUBAHAN RELATIF</span><span class="stat-icon">⌁</span></div><strong id="changeValue">-- <small>cm</small></strong><p>Terhadap pembacaan awal simulasi</p></article>
         <article class="stat-card"><div class="stat-top"><span>SATELIT TERDETEKSI</span><span class="stat-icon">✧</span></div><strong id="satelliteValue">-- <small>SV</small></strong><p><span class="tiny-dot green"></span> NEO-M8N · data contoh</p></article>
         <article class="stat-card"><div class="stat-top"><span>STATUS SISTEM</span><span class="stat-icon">◉</span></div><strong class="status-text" id="systemStatus">DEMO</strong><p>Belum terhubung ke perangkat fisik</p></article>
       </section>
-      <section class="panel hidden" id="gnss" data-page="gnss">
+      <section class="panel" id="gnss">
         <div class="panel-heading"><div><div class="eyebrow">LOCATION & SATELLITE</div><h2>GNSS positioning</h2></div><span class="tag">NEO-M8N · SIMULASI</span></div>
         <div class="gnss-grid">
           <div class="coord-card"><span>LATITUDE</span><b id="latitude">-2.9900°</b></div><div class="coord-card"><span>LONGITUDE</span><b id="longitude">104.7600°</b></div><div class="coord-card"><span>GNSS FIX</span><b id="fixStatus">DEMO FIX</b></div><div class="coord-card"><span>UPDATE</span><b id="gnssTime">--:--:--</b></div>
@@ -104,7 +104,7 @@
         </div>
         <div class="map-legend"><span><i class="map-dot tsense"></i> T-SENSE-001 (koordinat simulasi)</span><span><i class="map-dot tide"></i> Stasiun pasut BIG</span><span class="muted">Zoom: tombol +/− atau cubit layar · klik peta lalu scroll untuk zoom</span></div>
       </section>
-      <section class="panel hidden" id="water" data-page="water">
+      <section class="panel" id="water">
         <div class="panel-heading"><div><div class="eyebrow">A01NYUB ULTRASONIC SENSOR</div><h2>Sea water level monitoring</h2><p class="muted">Jarak sensor ke permukaan air · satuan cm</p></div><div class="segmented" role="group"><button class="period active" data-period="second">Per detik</button><button class="period" data-period="hour">Per jam</button><button class="period" data-period="day">Per hari</button></div></div>
         <div class="wv-card">
           <div class="wv-head"><div><b>Jarak sensor ke air</b><small>Ultrasonic A01NYUB · satuan cm</small></div><span class="tag">A01NYUB</span></div>
@@ -128,7 +128,7 @@
         <div class="chart-legend"><span><i></i> Jarak sensor ke air (simulasi)</span><span id="chartCount">0 titik data</span></div>
         <div class="chart-actions"><button id="pauseSimulation" class="btn outline">Ⅱ Jeda simulasi</button><button id="resetSimulation" class="btn outline">↻ Reset</button></div>
       </section>
-      <section class="panel hidden" id="tide" data-page="tide">
+      <section class="panel" id="tide">
   <div class="panel-heading">
     <div>
       <div class="eyebrow">TIDAL REFERENCE</div>
@@ -145,7 +145,7 @@
   </div>
   <div class="chart-wrap"><canvas id="tideChart"></canvas></div>
 </section>
-      <section class="panel hidden" id="risk" data-page="risk">
+      <section class="panel" id="risk">
         <div class="panel-heading">
           <div><div class="eyebrow">COASTAL EARLY INDICATION</div><h2>Indikator potensi banjir rob</h2><p class="muted">Status dari elevasi muka air, jarak ke ambang lokal, dan laju perubahan</p></div>
           <span class="tag warning" id="robCalTag">BELUM DIKALIBRASI</span>
@@ -174,17 +174,17 @@
           <p>Status ditentukan dari jarak ke ambang lokal (ambang − Z), dan dinaikkan satu tingkat bila R melebihi batas laju cepat saat sudah dekat ambang. Naik status memerlukan beberapa epoch berturut-turut; turun status memakai histeresis. Semua ambang adalah parameter yang wajib dikalibrasi dengan data dan pengukuran lokal (<code>assets/rob-config.json</code>).</p>
         </details>
       </section>
-      <section class="panel hidden" id="diagnostics" data-page="diagnostics">
+      <section class="panel" id="diagnostics">
         <div class="panel-heading"><div><div class="eyebrow">HARDWARE HEALTH</div><h2>Device diagnostics</h2></div><span class="tag">STATUS DEMO</span></div>
         <div class="diagnostic-grid"><div class="diagnostic"><span class="diag-icon">↕</span><div><b>A01NYUB Sensor</b><small>Ultrasonic distance</small></div><strong class="diag-state">SIMULASI</strong></div><div class="diagnostic"><span class="diag-icon">◎</span><div><b>NEO-M8N GNSS</b><small>Positioning receiver</small></div><strong class="diag-state">SIMULASI</strong></div><div class="diagnostic"><span class="diag-icon">▤</span><div><b>MicroSD Storage</b><small>Local data logging</small></div><strong class="diag-state">BELUM DICEK</strong></div><div class="diagnostic"><span class="diag-icon">⌁</span><div><b>ESP32 Connectivity</b><small>Wi-Fi / API connection</small></div><strong class="diag-state">OFFLINE</strong></div></div>
       </section>
-      <section class="panel hidden" id="data" data-page="data">
+      <section class="panel" id="data">
         <div class="panel-heading"><div><div class="eyebrow">RECORDS & EXPORT</div><h2>Data management</h2><p class="muted">Kelola dan unduh data pengukuran pada sesi ini.</p></div><span class="tag">BROWSER SESSION</span></div>
         <div class="data-toolbar"><div><b id="recordCount">0 rekaman</b><small>Data simulasi sementara di browser</small></div><div class="export-buttons"><button class="btn export" data-export="csv">↓ CSV</button><button class="btn export" data-export="txt">↓ TXT</button><button class="btn export" data-export="geojson">↓ GeoJSON</button></div></div>
         <div class="table-wrap"><table><thead><tr><th>WAKTU</th><th>JARAK (CM)</th><th>LATITUDE</th><th>LONGITUDE</th><th>SUMBER</th></tr></thead><tbody id="historyBody"><tr><td colspan="5" class="empty">Menunggu data simulasi…</td></tr></tbody></table></div>
         <p class="small-note">CSV dapat dibuka menggunakan Microsoft Excel. Ekspor ini belum merupakan arsip cloud dan akan hilang saat halaman dimuat ulang.</p>
       </section>
-      <section class="panel hidden" id="profile" data-page="profile">
+      <section class="panel" id="profile">
         <div class="panel-heading"><div><div class="eyebrow">AKUN</div><h2>Profil saya</h2><p class="muted">Atur nama dan pilih ikon animasi bertema OCEANOVA.</p></div><span class="tag" id="profVerified">EMAIL</span></div>
         <div class="prof-grid">
           <div class="prof-card">

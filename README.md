@@ -69,7 +69,7 @@ Untuk Firebase Authentication, `localhost` harus terdaftar di Authorized domains
 
 ## F. Fitur versi 3
 
-- **Navigasi halaman:** sidebar kini berpindah antar halaman (Overview, GNSS, Water Level, Tidal Reference, Rob Indicators, Device Diagnostics, Data Management, Profil Saya). Di layar kecil menu menjadi baris yang bisa digeser.
+- **Navigasi sidebar:** satu halaman panjang. Klik menu untuk menggulir ke bagian yang dipilih, dan menu menyorot bagian yang sedang terlihat. Tombol hamburger (tiga garis) melipat sidebar menjadi deretan ikon; pilihan terakhir diingat di browser.
 - **Profil akun:** ubah nama tampilan (Firebase Auth), kirim tautan ganti password, dan pilih salah satu dari 7 ikon animasi bertema OCEANOVA. Pilihan ikon disimpan di browser (localStorage) per akun. Untuk menyimpan lintas perangkat diperlukan Firestore dan Security Rules.
 - **Logo gambar:** `assets/img/` berisi logo terang, logo gelap, ikon 512, favicon, dan apple-touch-icon. Mengganti gambar cukup menimpa file dengan nama yang sama.
 - Untuk menambah ikon avatar baru, tambahkan satu entri di array `AVATARS` pada `assets/app.js` dan animasinya di `assets/style.css`.

@@ -482,21 +482,44 @@ let currentUser = null, currentAvatar = AVATARS[0].id;
    NAVIGASI HALAMAN (sidebar) dan PROFIL AKUN
    ===================================================================== */
 const PAGES = ["overview", "gnss", "water", "tide", "risk", "diagnostics", "data", "profile"];
+function setActiveNav(name) {
+  document.querySelectorAll(".nav-item[data-view]").forEach(n => n.classList.toggle("active", n.dataset.view === name));
+}
+// Satu halaman panjang: menu menggulir mulus ke bagian yang dipilih
 function showPage(name, push = true) {
   if (!PAGES.includes(name)) name = "overview";
-  document.querySelectorAll("[data-page]").forEach(el => el.classList.toggle("hidden", el.dataset.page !== name));
-  document.querySelectorAll(".nav-item[data-view]").forEach(n => n.classList.toggle("active", n.dataset.view === name));
-  if (push && location.hash !== "#" + name) history.pushState(null, "", "#" + name);
-  window.scrollTo(0, 0);
+  const el = name === "overview" ? null : document.getElementById(name);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  else window.scrollTo({ top: 0, behavior: "smooth" });
+  if (push) history.replaceState(null, "", "#" + name);
+  setActiveNav(name);
+}
+// Sorot menu sesuai bagian yang sedang terlihat
+let spyBusy = false;
+function spyScroll() {
+  if (spyBusy) return; spyBusy = true;
   requestAnimationFrame(() => {
-    if (name === "water") drawChart();
-    if (name === "tide") drawTideChart();
-    if (name === "gnss") { initMap(); if (map) map.invalidateSize(); }
+    spyBusy = false;
+    if (dashboard.classList.contains("hidden")) return;
+    let active = "overview";
+    for (const id of PAGES.slice(1)) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= 160) active = id; }
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = "profile";
+    setActiveNav(active);
   });
 }
+window.addEventListener("scroll", spyScroll, { passive: true });
 document.querySelectorAll(".nav-item[data-view]").forEach(n => n.addEventListener("click", e => { e.preventDefault(); showPage(n.dataset.view); }));
-window.addEventListener("popstate", () => showPage(location.hash.slice(1), false));
 document.getElementById("profileChip")?.addEventListener("click", () => showPage("profile"));
+
+// Sidebar bisa dilipat (hamburger). Saat tertutup hanya ikon menu yang tampil.
+const NAV_KEY = "tsense:navCollapsed";
+function setNavCollapsed(collapsed, save = true) {
+  dashboard.classList.toggle("nav-collapsed", collapsed);
+  document.getElementById("navToggle")?.setAttribute("aria-expanded", String(!collapsed));
+  if (save) store.set(NAV_KEY, collapsed ? "1" : "0");
+  setTimeout(() => { drawChart(); drawTideChart(); if (map) map.invalidateSize(); }, 300); // lebar konten berubah
+}
+document.getElementById("navToggle")?.addEventListener("click", () => setNavCollapsed(!dashboard.classList.contains("nav-collapsed")));
 
 function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
 function applyAvatar(id) {
@@ -547,7 +570,11 @@ function startDashboard() {
   if(timer) return;
   tickClock();
   addSample();
-  showPage(location.hash.slice(1), false);
+  initMap();
+  const savedNav = store.get(NAV_KEY);
+  setNavCollapsed(savedNav === null ? window.innerWidth <= 700 : savedNav === "1", false);
+  if (location.hash.length > 1) setTimeout(() => showPage(location.hash.slice(1), false), 350);
+  spyScroll();
   timer = setInterval(() => { tickClock(); if (!paused) addSample(); }, 1000);
   if (!robEngine) initRob();
   // Muat referensi pasut BIG sekali saja, memakai posisi GNSS terakhir (simulasi)
