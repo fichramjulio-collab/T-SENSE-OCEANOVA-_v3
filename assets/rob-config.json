@@ -1,0 +1,22 @@
+{
+  "_catatan": "NILAI DI BAWAH ADALAH CONTOH UNTUK SIMULASI. Ganti dengan hasil survei dan kalibrasi lokal, lalu ubah terkalibrasi menjadi true.",
+  "terkalibrasi": false,
+
+  "zAcuanM": 2.50,
+  "zAmbangM": 2.30,
+  "marginWaspadaM": 0.20,
+  "marginSiagaM": 0.12,
+  "histeresisM": 0.03,
+  "lajuCepatMPerJam": 1.0,
+
+  "koreksiDM": 0,
+  "dMinCm": 25,
+  "dMaxCm": 450,
+  "dSebaranMaksCm": 6,
+
+  "epochDetik": 10,
+  "minSampelValid": 5,
+  "maksCelahDetik": 30,
+  "nNaik": 3,
+  "nTurun": 4
+}

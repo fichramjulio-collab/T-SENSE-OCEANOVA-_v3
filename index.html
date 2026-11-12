@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071d2b">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <title>T-SENSE by OCEANOVA | Coastal Monitoring</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <div id="authScreen" class="auth-screen">
+    <div class="auth-visual">
+      <div class="eyebrow">OCEAN INNOVATION PRESENTS</div>
+      <h1 class="auth-logo"><img src="assets/img/oceanova-logo-gelap.png" alt="OCEANOVA"></h1>
+      <p class="auth-sub">Coastal intelligence. Safer communities.</p>
+      <div class="auth-wave"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="auth-foot">T-SENSE · MULTI-GNSS · IoT</div>
+    </div>
+    <main class="auth-card">
+      <img class="mobile-logo" src="assets/img/oceanova-logo-terang.png" alt="OCEANOVA">
+      <div class="eyebrow" id="authEyebrow">SECURE ACCESS</div>
+      <h2 id="authTitle">Selamat datang kembali</h2>
+      <p class="muted" id="authDescription">Masuk untuk membuka pusat pemantauan pesisir T-SENSE.</p>
+      <div id="authMessage" class="message" role="status"></div>
+      <form id="loginForm" class="auth-form">
+        <label>Email Gmail<input id="loginEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
+        <label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required minlength="6"></label>
+        <button class="btn primary full" type="submit">Masuk ke Dashboard <span>→</span></button>
+      </form>
+      <form id="registerForm" class="auth-form hidden">
+        <label>Nama lengkap<input id="registerName" type="text" autocomplete="name" placeholder="Nama pengguna" required></label>
+        <label>Email Gmail<input id="registerEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
+        <label>Buat password<input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required minlength="6"></label>
+        <label>Ulangi password<input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Ulangi password" required minlength="6"></label>
+        <button class="btn primary full" type="submit">Buat akun <span>→</span></button>
+      </form>
+      <div class="or-line"><span>atau</span></div>
+      <button id="googleButton" class="btn google full" type="button"><b>G</b> Lanjutkan dengan Google</button>
+      <div class="auth-links">
+        <button id="showRegister" class="link-btn">Belum punya akun? Daftar</button>
+        <button id="showLogin" class="link-btn hidden">Sudah punya akun? Masuk</button>
+        <button id="forgotPassword" class="link-btn">Lupa password?</button>
+      </div>
+      <p class="legal">Akses hanya untuk pengguna yang diizinkan. Dengan masuk, Anda menyetujui penggunaan dashboard T-SENSE.</p>
+      <div class="auth-config-note hidden" id="configNotice">Konfigurasi Firebase belum diisi. Lengkapi <code>assets/firebase-config.js</code>.</div>
+    </main>
+  </div>
+
+  <div id="dashboard" class="app hidden">
+    <aside class="sidebar">
+      <div class="side-brand"><img src="assets/img/oceanova-logo-gelap.png" alt="OCEANOVA"></div>
+      <div class="side-label">MONITORING CENTER</div>
+      <nav>
+        <a class="nav-item active" href="#overview" data-view="overview"><i>◫</i> Overview</a>
+        <a class="nav-item" href="#gnss" data-view="gnss"><i>◎</i> GNSS Position</a>
+        <a class="nav-item" href="#water" data-view="water"><i>≈</i> Water Level</a>
+        <a class="nav-item" href="#tide" data-view="tide"><i>〰</i> Tidal Reference</a>
+        <a class="nav-item" href="#risk" data-view="risk"><i>△</i> Rob Indicators</a>
+        <a class="nav-item" href="#diagnostics" data-view="diagnostics"><i>⌁</i> Device Diagnostics</a>
+        <a class="nav-item" href="#data" data-view="data"><i>⇩</i> Data Management</a>
+        <div class="side-label nav-sep">AKUN</div>
+        <a class="nav-item" href="#profile" data-view="profile"><i>☺</i> Profil Saya</a>
+      </nav>
+      <div class="side-bottom"><div class="online-dot"></div><span>Dashboard preview mode</span></div>
+    </aside>
+    <main class="main-content" id="overview">
+      <header class="topbar2">
+        <div>
+          <div class="crumb">OCEANOVA <i>/</i> T-SENSE</div>
+          <h1>Coastal Monitoring Dashboard</h1>
+        </div>
+        <div class="tb-right">
+          <span class="sim-pill"><b></b> SIMULATION MODE</span>
+          <span class="tb-clock" id="clock">--.--.-- WIB</span>
+          <button id="profileChip" class="profile-chip" type="button" title="Buka profil"><span class="avatar-sm" id="chipAvatar"></span><b id="chipName">Operator</b></button>
+          <button id="logoutButton" class="btn outline small-btn">Keluar</button>
+        </div>
+      </header>
+      <section class="hello-row" data-page="overview">
+        <div>
+          <div class="crumb">T-SENSE · COASTAL EARLY INDICATION</div>
+          <h2 class="hello">Halo, <span id="userName">Operator</span><em>✦</em></h2>
+          <p class="muted">Pantau perubahan muka air laut dan status perangkat dalam satu tampilan.</p>
+        </div>
+        <div class="station-card"><span class="st-icon">⌖</span><div><small>STATION ID</small><b>T-SENSE-001</b></div><i class="st-dot"></i></div>
+      </section>
+      <div class="sim-notice" data-page="overview"><b>ⓘ Data simulasi:</b> angka, koordinat, grafik, dan status perangkat pada halaman ini merupakan contoh antarmuka, bukan pengukuran langsung dari alat. Ambang rob dan elevasi muka air belum dikalibrasi.</div>
+      <section class="stat-grid" data-page="overview">
+        <article class="stat-card"><div class="stat-top"><span>JARAK SENSOR KE AIR</span><span class="stat-icon">↕</span></div><strong id="distanceValue">-- <small>cm</small></strong><p><span class="tiny-dot blue"></span> A01NYUB · pembacaan contoh</p></article>
+        <article class="stat-card"><div class="stat-top"><span>PERUBAHAN RELATIF</span><span class="stat-icon">⌁</span></div><strong id="changeValue">-- <small>cm</small></strong><p>Terhadap pembacaan awal simulasi</p></article>
+        <article class="stat-card"><div class="stat-top"><span>SATELIT TERDETEKSI</span><span class="stat-icon">✧</span></div><strong id="satelliteValue">-- <small>SV</small></strong><p><span class="tiny-dot green"></span> NEO-M8N · data contoh</p></article>
+        <article class="stat-card"><div class="stat-top"><span>STATUS SISTEM</span><span class="stat-icon">◉</span></div><strong class="status-text" id="systemStatus">DEMO</strong><p>Belum terhubung ke perangkat fisik</p></article>
+      </section>
+      <section class="panel hidden" id="gnss" data-page="gnss">
+        <div class="panel-heading"><div><div class="eyebrow">LOCATION & SATELLITE</div><h2>GNSS positioning</h2></div><span class="tag">NEO-M8N · SIMULASI</span></div>
+        <div class="gnss-grid">
+          <div class="coord-card"><span>LATITUDE</span><b id="latitude">-2.9900°</b></div><div class="coord-card"><span>LONGITUDE</span><b id="longitude">104.7600°</b></div><div class="coord-card"><span>GNSS FIX</span><b id="fixStatus">DEMO FIX</b></div><div class="coord-card"><span>UPDATE</span><b id="gnssTime">--:--:--</b></div>
+        </div>
+        <div class="map-wrap">
+          <div id="map" class="map-live" aria-label="Peta posisi stasiun T-SENSE"></div>
+          <div class="map-tools"><button id="mapCenter" class="btn outline" type="button">◎ Pusatkan</button><button id="mapFit" class="btn outline" type="button">⤢ Lihat semua titik</button></div>
+        </div>
+        <div class="map-legend"><span><i class="map-dot tsense"></i> T-SENSE-001 (koordinat simulasi)</span><span><i class="map-dot tide"></i> Stasiun pasut BIG</span><span class="muted">Zoom: tombol +/− atau cubit layar · klik peta lalu scroll untuk zoom</span></div>
+      </section>
+      <section class="panel hidden" id="water" data-page="water">
+        <div class="panel-heading"><div><div class="eyebrow">A01NYUB ULTRASONIC SENSOR</div><h2>Sea water level monitoring</h2><p class="muted">Jarak sensor ke permukaan air · satuan cm</p></div><div class="segmented" role="group"><button class="period active" data-period="second">Per detik</button><button class="period" data-period="hour">Per jam</button><button class="period" data-period="day">Per hari</button></div></div>
+        <div class="wv-card">
+          <div class="wv-head"><div><b>Jarak sensor ke air</b><small>Ultrasonic A01NYUB · satuan cm</small></div><span class="tag">A01NYUB</span></div>
+          <div class="wv-big"><strong id="wvValue">--</strong><small>cm</small></div>
+          <div class="wv-delta" id="wvDelta">Menunggu pembacaan…</div>
+          <div class="water-visual" role="img" aria-label="Ilustrasi jarak sensor ke permukaan air">
+            <span class="wv-sensor"></span>
+            <span class="wv-tag sensor">SENSOR</span>
+            <div class="wv-line" id="wvLine"><span class="wv-dist" id="wvDist">-- cm</span></div>
+            <div class="wv-water" id="wvWater">
+              <svg class="wv-wave back" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 Q75 0 150 14 T300 14 T450 14 T600 14 T750 14 T900 14 T1050 14 T1200 14 V28 H0 Z"/></svg>
+              <svg class="wv-wave front" viewBox="0 0 1200 28" preserveAspectRatio="none" aria-hidden="true"><path d="M0 14 Q75 28 150 14 T300 14 T450 14 T600 14 T750 14 T900 14 T1050 14 T1200 14 V28 H0 Z"/></svg>
+              <div class="wv-body"><i class="wv-bubble" style="left:12%;animation-delay:0s"></i><i class="wv-bubble" style="left:31%;animation-delay:1.8s"></i><i class="wv-bubble" style="left:57%;animation-delay:.9s"></i><i class="wv-bubble" style="left:78%;animation-delay:2.6s"></i><i class="wv-bubble" style="left:91%;animation-delay:3.4s"></i></div>
+            </div>
+            <span class="wv-tag surface">WATER SURFACE</span>
+          </div>
+          <div class="wv-foot"><span>● Pembacaan contoh</span><span>Interval tampilan: 1 detik</span></div>
+        </div>
+        <div class="chart-summary"><div><span class="muted">PEMBACAAN TERKINI</span><b id="latestReading">-- cm</b></div><div><span class="muted">RENTANG DATA</span><b id="chartRange">60 detik terakhir</b></div><div><span class="muted">FREKUENSI SIMULASI</span><b>1 detik</b></div></div>
+        <div class="chart-wrap"><canvas id="waterChart" aria-label="Grafik pembacaan jarak sensor"></canvas></div>
+        <div class="chart-legend"><span><i></i> Jarak sensor ke air (simulasi)</span><span id="chartCount">0 titik data</span></div>
+        <div class="chart-actions"><button id="pauseSimulation" class="btn outline">Ⅱ Jeda simulasi</button><button id="resetSimulation" class="btn outline">↻ Reset</button></div>
+      </section>
+      <section class="panel hidden" id="tide" data-page="tide">
+  <div class="panel-heading">
+    <div>
+      <div class="eyebrow">TIDAL REFERENCE</div>
+      <h2>Stasiun referensi pasut BIG</h2>
+      <p class="muted">Pembanding muka air laut dari stasiun pasang surut terdekat</p>
+    </div>
+    <span class="tag" id="tideSourceTag">BIG</span>
+  </div>
+  <div class="gnss-grid">
+    <div class="coord-card"><span>STASIUN</span><b id="tideName">--</b></div>
+    <div class="coord-card"><span>JARAK KE T-SENSE</span><b id="tideDistance">-- km</b></div>
+    <div class="coord-card"><span>DATUM</span><b id="tideDatum">--</b></div>
+    <div class="coord-card"><span>TINGGI TERAKHIR</span><b id="tideLatest">-- m</b></div>
+  </div>
+  <div class="chart-wrap"><canvas id="tideChart"></canvas></div>
+</section>
+      <section class="panel hidden" id="risk" data-page="risk">
+        <div class="panel-heading">
+          <div><div class="eyebrow">COASTAL EARLY INDICATION</div><h2>Indikator potensi banjir rob</h2><p class="muted">Status dari elevasi muka air, jarak ke ambang lokal, dan laju perubahan</p></div>
+          <span class="tag warning" id="robCalTag">BELUM DIKALIBRASI</span>
+        </div>
+        <div class="rob-levels">
+          <div class="rob-level" data-level="0"><i></i><b>NORMAL</b><small>Muka air masih jauh di bawah ambang lokal</small></div>
+          <div class="rob-level" data-level="1"><i></i><b>WASPADA</b><small>Muka air mendekati ambang atau naik cepat</small></div>
+          <div class="rob-level" data-level="2"><i></i><b>SIAGA</b><small>Muka air sangat dekat atau melewati ambang</small></div>
+        </div>
+        <div class="rob-metrics">
+          <div class="coord-card"><span>ELEVASI MUKA AIR (Z)</span><b id="robZ">-- m</b></div>
+          <div class="coord-card"><span>JARAK KE AMBANG</span><b id="robMargin">-- cm</b></div>
+          <div class="coord-card"><span>LAJU PERUBAHAN (R)</span><b id="robRate">-- m/jam</b></div>
+          <div class="coord-card"><span>KUALITAS DATA</span><b id="robQuality">--</b></div>
+        </div>
+        <p class="rob-note" id="robNote">Mengumpulkan data epoch pertama…</p>
+        <div class="rob-sim">
+          <span class="muted" style="font-size:10px">Uji skenario simulasi:</span>
+          <button class="btn outline" id="robFall">Normal / air surut</button>
+          <button class="btn outline" id="robRise">▲ Air naik</button>
+        </div>
+        <details class="rob-formula">
+          <summary>Rumus dan aturan status</summary>
+          <p><code>Z_air(t) = Z_acuan − d(t)</code>, dengan d jarak vertikal terkoreksi dari titik acuan ke permukaan air (median sampel valid per epoch).</p>
+          <p><code>R = (Z_t − Z_(t−1)) / Δt</code> dalam m/jam, Δt dari stempel waktu aktual. Positif naik, negatif turun. R tidak dihitung bila epoch sebelumnya tidak valid atau Δt tidak sah.</p>
+          <p>Status ditentukan dari jarak ke ambang lokal (ambang − Z), dan dinaikkan satu tingkat bila R melebihi batas laju cepat saat sudah dekat ambang. Naik status memerlukan beberapa epoch berturut-turut; turun status memakai histeresis. Semua ambang adalah parameter yang wajib dikalibrasi dengan data dan pengukuran lokal (<code>assets/rob-config.json</code>).</p>
+        </details>
+      </section>
+      <section class="panel hidden" id="diagnostics" data-page="diagnostics">
+        <div class="panel-heading"><div><div class="eyebrow">HARDWARE HEALTH</div><h2>Device diagnostics</h2></div><span class="tag">STATUS DEMO</span></div>
+        <div class="diagnostic-grid"><div class="diagnostic"><span class="diag-icon">↕</span><div><b>A01NYUB Sensor</b><small>Ultrasonic distance</small></div><strong class="diag-state">SIMULASI</strong></div><div class="diagnostic"><span class="diag-icon">◎</span><div><b>NEO-M8N GNSS</b><small>Positioning receiver</small></div><strong class="diag-state">SIMULASI</strong></div><div class="diagnostic"><span class="diag-icon">▤</span><div><b>MicroSD Storage</b><small>Local data logging</small></div><strong class="diag-state">BELUM DICEK</strong></div><div class="diagnostic"><span class="diag-icon">⌁</span><div><b>ESP32 Connectivity</b><small>Wi-Fi / API connection</small></div><strong class="diag-state">OFFLINE</strong></div></div>
+      </section>
+      <section class="panel hidden" id="data" data-page="data">
+        <div class="panel-heading"><div><div class="eyebrow">RECORDS & EXPORT</div><h2>Data management</h2><p class="muted">Kelola dan unduh data pengukuran pada sesi ini.</p></div><span class="tag">BROWSER SESSION</span></div>
+        <div class="data-toolbar"><div><b id="recordCount">0 rekaman</b><small>Data simulasi sementara di browser</small></div><div class="export-buttons"><button class="btn export" data-export="csv">↓ CSV</button><button class="btn export" data-export="txt">↓ TXT</button><button class="btn export" data-export="geojson">↓ GeoJSON</button></div></div>
+        <div class="table-wrap"><table><thead><tr><th>WAKTU</th><th>JARAK (CM)</th><th>LATITUDE</th><th>LONGITUDE</th><th>SUMBER</th></tr></thead><tbody id="historyBody"><tr><td colspan="5" class="empty">Menunggu data simulasi…</td></tr></tbody></table></div>
+        <p class="small-note">CSV dapat dibuka menggunakan Microsoft Excel. Ekspor ini belum merupakan arsip cloud dan akan hilang saat halaman dimuat ulang.</p>
+      </section>
+      <section class="panel hidden" id="profile" data-page="profile">
+        <div class="panel-heading"><div><div class="eyebrow">AKUN</div><h2>Profil saya</h2><p class="muted">Atur nama dan pilih ikon animasi bertema OCEANOVA.</p></div><span class="tag" id="profVerified">EMAIL</span></div>
+        <div class="prof-grid">
+          <div class="prof-card">
+            <div class="prof-avatar" id="profAvatar"></div>
+            <b id="profName">Operator</b><small id="profEmail"></small>
+            <form id="profileForm" class="auth-form"><label>Nama tampilan<input id="profNameInput" type="text" maxlength="40" required></label><button class="btn primary full" type="submit">Simpan nama</button></form>
+            <div id="profMsg" class="message" role="status"></div>
+            <div class="prof-actions"><button class="btn outline" id="profReset" type="button">Kirim tautan ganti password</button><button class="btn outline" id="profLogout" type="button">Keluar</button></div>
+          </div>
+          <div><div class="eyebrow">PILIH IKON ANIMASI</div><div class="avatar-grid" id="avatarGrid" role="radiogroup" aria-label="Ikon profil"></div><p class="small-note">Pilihan ikon tersimpan di browser ini untuk akun Anda.</p></div>
+        </div>
+      </section>
+      <footer class="footer-brand"><div class="footer-logo">T-SENSE</div><b>by OCEANOVA</b><p>Coastal Monitoring & Early Indication System</p><small>Prototype dashboard · Data simulasi bukan data observasi resmi</small></footer>
+    </main>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script type="module" src="assets/app.js"></script>
+</body></html>

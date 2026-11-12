@@ -1,0 +1,13 @@
+{
+  "stations": [
+    {
+      "id": "STASIUN-BIG-01",
+      "name": "CMTK - Muntok",
+      "lat": -2.067625,
+      "lon": 105.129201,
+      "datum": "MSL",
+      "source": "BIG",
+      "dataFile": "assets/tide-stasiun-01.csv"
+    }
+  ]
+}
