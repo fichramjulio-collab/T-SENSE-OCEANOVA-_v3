@@ -25,13 +25,13 @@
       <p class="muted" id="authDescription">Masuk untuk membuka pusat pemantauan pesisir T-SENSE.</p>
       <div id="authMessage" class="message" role="status"></div>
       <form id="loginForm" class="auth-form">
-        <label>Email Gmail<input id="loginEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
+        <label>Email/Gmail<input id="loginEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
         <label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Masukkan password" required minlength="6"></label>
         <button class="btn primary full" type="submit">Masuk ke Dashboard <span>→</span></button>
       </form>
       <form id="registerForm" class="auth-form hidden">
         <label>Nama lengkap<input id="registerName" type="text" autocomplete="name" placeholder="Nama pengguna" required></label>
-        <label>Email Gmail<input id="registerEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
+        <label>Email/Gmail<input id="registerEmail" type="email" autocomplete="email" placeholder="nama@gmail.com" required></label>
         <label>Buat password<input id="registerPassword" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required minlength="6"></label>
         <label>Ulangi password<input id="registerConfirm" type="password" autocomplete="new-password" placeholder="Ulangi password" required minlength="6"></label>
         <button class="btn primary full" type="submit">Buat akun <span>→</span></button>
@@ -184,20 +184,39 @@
         <div class="table-wrap"><table><thead><tr><th>WAKTU</th><th>JARAK (CM)</th><th>LATITUDE</th><th>LONGITUDE</th><th>SUMBER</th></tr></thead><tbody id="historyBody"><tr><td colspan="5" class="empty">Menunggu data simulasi…</td></tr></tbody></table></div>
         <p class="small-note">CSV dapat dibuka menggunakan Microsoft Excel. Ekspor ini belum merupakan arsip cloud dan akan hilang saat halaman dimuat ulang.</p>
       </section>
-      <section class="panel" id="profile">
-        <div class="panel-heading"><div><div class="eyebrow">AKUN</div><h2>Profil saya</h2><p class="muted">Atur nama dan pilih ikon animasi bertema OCEANOVA.</p></div><span class="tag" id="profVerified">EMAIL</span></div>
-        <div class="prof-grid">
-          <div class="prof-card">
-            <div class="prof-avatar" id="profAvatar"></div>
-            <b id="profName">Operator</b><small id="profEmail"></small>
-            <form id="profileForm" class="auth-form"><label>Nama tampilan<input id="profNameInput" type="text" maxlength="40" required></label><button class="btn primary full" type="submit">Simpan nama</button></form>
-            <div id="profMsg" class="message" role="status"></div>
-            <div class="prof-actions"><button class="btn outline" id="profReset" type="button">Kirim tautan ganti password</button><button class="btn outline" id="profLogout" type="button">Keluar</button></div>
-          </div>
-          <div><div class="eyebrow">PILIH IKON ANIMASI</div><div class="avatar-grid" id="avatarGrid" role="radiogroup" aria-label="Ikon profil"></div><p class="small-note">Pilihan ikon tersimpan di browser ini untuk akun Anda.</p></div>
+      <footer class="footer-brand"><div class="footer-logo">T-SENSE</div><b>by OCEANOVA</b><p>Coastal Monitoring & Early Indication System</p><small>Prototype dashboard · Data simulasi bukan data observasi resmi</small></footer>
+    </main>
+
+    <main class="main-content hidden" id="profilePage">
+      <header class="topbar2 pf-in" style="--d:0s">
+        <div><div class="crumb">OCEANOVA <i>/</i> AKUN</div><h1>Profil Saya</h1></div>
+        <div class="tb-right"><button id="profBack" class="btn outline small-btn" type="button">← Kembali ke dashboard</button></div>
+      </header>
+      <section class="pf-hero pf-in" style="--d:.08s">
+        <svg class="pf-wave" viewBox="0 0 1200 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 35q75-30 150 0t150 0 150 0 150 0 150 0 150 0 150 0 150 0V70H0z" fill="#53c7ce"/></svg>
+        <i class="pf-bubble" style="left:10%;animation-delay:0s"></i><i class="pf-bubble" style="left:34%;animation-delay:2.2s"></i><i class="pf-bubble" style="left:63%;animation-delay:1.1s"></i><i class="pf-bubble" style="left:86%;animation-delay:3.4s"></i>
+        <div class="pf-avatar"><div class="prof-avatar" id="profAvatar"></div></div>
+        <div class="pf-id"><span class="pf-badge" id="profVerified">EMAIL</span><h2 id="profName">Operator</h2><p id="profEmail"></p><p class="pf-ikon">Ikon aktif: <b id="profAvatarName">Gelombang</b></p></div>
+      </section>
+      <section class="pf-stats">
+        <div class="pf-stat pf-in" style="--d:.16s"><span>BERGABUNG</span><b id="profJoined">—</b></div>
+        <div class="pf-stat pf-in" style="--d:.2s"><span>LOGIN TERAKHIR</span><b id="profLast">—</b></div>
+        <div class="pf-stat pf-in" style="--d:.24s"><span>MASUK DENGAN</span><b id="profProvider">—</b></div>
+      </section>
+      <section class="pf-cols">
+        <div class="prof-card pf-in" style="--d:.28s">
+          <div class="eyebrow">PENGATURAN AKUN</div>
+          <form id="profileForm" class="auth-form"><label>Nama tampilan<input id="profNameInput" type="text" maxlength="40" required></label><button class="btn primary full" type="submit">Simpan nama</button></form>
+          <div id="profMsg" class="message" role="status"></div>
+          <div class="prof-actions"><button class="btn outline" id="profReset" type="button">Kirim tautan ganti password</button><button class="btn outline" id="profLogout" type="button">Keluar</button></div>
+        </div>
+        <div class="panel pf-in" style="--d:.34s">
+          <div class="panel-heading"><div><div class="eyebrow">PERSONALISASI</div><h2>Pilih ikon animasi</h2><p class="muted">Ikon tampil di bilah atas dan profil Anda.</p></div></div>
+          <div class="avatar-grid" id="avatarGrid" role="radiogroup" aria-label="Ikon profil"></div>
+          <p class="small-note">Pilihan ikon tersimpan di browser ini untuk akun Anda.</p>
         </div>
       </section>
-      <footer class="footer-brand"><div class="footer-logo">T-SENSE</div><b>by OCEANOVA</b><p>Coastal Monitoring & Early Indication System</p><small>Prototype dashboard · Data simulasi bukan data observasi resmi</small></footer>
+      <div class="pf-toast" id="profToast" role="status"></div>
     </main>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>

@@ -73,3 +73,5 @@ Untuk Firebase Authentication, `localhost` harus terdaftar di Authorized domains
 - **Profil akun:** ubah nama tampilan (Firebase Auth), kirim tautan ganti password, dan pilih salah satu dari 7 ikon animasi bertema OCEANOVA. Pilihan ikon disimpan di browser (localStorage) per akun. Untuk menyimpan lintas perangkat diperlukan Firestore dan Security Rules.
 - **Logo gambar:** `assets/img/` berisi logo terang, logo gelap, ikon 512, favicon, dan apple-touch-icon. Mengganti gambar cukup menimpa file dengan nama yang sama.
 - Untuk menambah ikon avatar baru, tambahkan satu entri di array `AVATARS` pada `assets/app.js` dan animasinya di `assets/style.css`.
+
+- **Halaman profil terpisah (v5):** ikon Profil Saya di sidebar membuka halaman khusus akun dengan banner animasi, info akun (bergabung, login terakhir, metode masuk), pengaturan nama/password, dan galeri ikon animasi. Menu lain kembali ke dashboard satu halaman.

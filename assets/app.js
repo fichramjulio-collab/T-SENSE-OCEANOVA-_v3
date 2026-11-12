@@ -111,7 +111,7 @@ document.getElementById("googleButton").addEventListener("click", async () => {
 document.getElementById("forgotPassword").addEventListener("click", async () => {
   if (!auth) return;
   const email = document.getElementById("loginEmail").value.trim();
-  if (!email) return showMessage("Masukkan alamat email pada kolom Gmail terlebih dahulu.", "error");
+  if (!email) return showMessage("Masukkan alamat email pada kolom Email/Gmail terlebih dahulu.", "error");
   try {
     await sendPasswordResetEmail(auth, email);
     showMessage("Tautan untuk mengatur ulang password telah dikirim jika email terdaftar.", "success");
@@ -482,34 +482,50 @@ let currentUser = null, currentAvatar = AVATARS[0].id;
    NAVIGASI HALAMAN (sidebar) dan PROFIL AKUN
    ===================================================================== */
 const PAGES = ["overview", "gnss", "water", "tide", "risk", "diagnostics", "data", "profile"];
+let inProfile = false;
 function setActiveNav(name) {
   document.querySelectorAll(".nav-item[data-view]").forEach(n => n.classList.toggle("active", n.dataset.view === name));
 }
-// Satu halaman panjang: menu menggulir mulus ke bagian yang dipilih
+// Dua tampilan: dashboard (satu halaman scroll) dan halaman profil terpisah
+function setView(profile) {
+  inProfile = profile;
+  document.getElementById("overview").classList.toggle("hidden", profile);
+  const pp = document.getElementById("profilePage");
+  pp.classList.toggle("hidden", !profile);
+  if (profile) { window.scrollTo(0, 0); pp.classList.remove("pf-run"); void pp.offsetWidth; pp.classList.add("pf-run"); }
+  else requestAnimationFrame(() => { drawChart(); drawTideChart(); if (map) map.invalidateSize(); });
+}
 function showPage(name, push = true) {
   if (!PAGES.includes(name)) name = "overview";
-  const el = name === "overview" ? null : document.getElementById(name);
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  else window.scrollTo({ top: 0, behavior: "smooth" });
+  if (name === "profile") { if (!inProfile) setView(true); else window.scrollTo({ top: 0, behavior: "smooth" }); }
+  else {
+    const was = inProfile; if (was) setView(false);
+    requestAnimationFrame(() => {
+      const el = name === "overview" ? null : document.getElementById(name);
+      if (el) el.scrollIntoView({ behavior: was ? "auto" : "smooth", block: "start" });
+      else window.scrollTo({ top: 0, behavior: was ? "auto" : "smooth" });
+    });
+  }
   if (push) history.replaceState(null, "", "#" + name);
   setActiveNav(name);
 }
-// Sorot menu sesuai bagian yang sedang terlihat
+// Sorot menu sesuai bagian yang sedang terlihat (hanya di tampilan dashboard)
 let spyBusy = false;
 function spyScroll() {
   if (spyBusy) return; spyBusy = true;
   requestAnimationFrame(() => {
     spyBusy = false;
-    if (dashboard.classList.contains("hidden")) return;
+    if (inProfile || dashboard.classList.contains("hidden")) return;
     let active = "overview";
-    for (const id of PAGES.slice(1)) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= 160) active = id; }
-    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = "profile";
+    for (const id of PAGES.slice(1, -1)) { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= 160) active = id; }
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) active = "data";
     setActiveNav(active);
   });
 }
 window.addEventListener("scroll", spyScroll, { passive: true });
 document.querySelectorAll(".nav-item[data-view]").forEach(n => n.addEventListener("click", e => { e.preventDefault(); showPage(n.dataset.view); }));
 document.getElementById("profileChip")?.addEventListener("click", () => showPage("profile"));
+document.getElementById("profBack")?.addEventListener("click", () => showPage("overview"));
 
 // Sidebar bisa dilipat (hamburger). Saat tertutup hanya ikon menu yang tampil.
 const NAV_KEY = "tsense:navCollapsed";
@@ -517,7 +533,7 @@ function setNavCollapsed(collapsed, save = true) {
   dashboard.classList.toggle("nav-collapsed", collapsed);
   document.getElementById("navToggle")?.setAttribute("aria-expanded", String(!collapsed));
   if (save) store.set(NAV_KEY, collapsed ? "1" : "0");
-  setTimeout(() => { drawChart(); drawTideChart(); if (map) map.invalidateSize(); }, 300); // lebar konten berubah
+  setTimeout(() => { drawChart(); drawTideChart(); if (map) map.invalidateSize(); }, 300);
 }
 document.getElementById("navToggle")?.addEventListener("click", () => setNavCollapsed(!dashboard.classList.contains("nav-collapsed")));
 
@@ -525,6 +541,7 @@ function setText(id, v) { const el = document.getElementById(id); if (el) el.tex
 function applyAvatar(id) {
   currentAvatar = id;
   const svg = avatarSvg(id);
+  setText("profAvatarName", (AVATARS.find(x => x.id === id) || AVATARS[0]).name);
   ["chipAvatar", "profAvatar"].forEach(t => { const el = document.getElementById(t); if (el) el.innerHTML = svg; });
   document.querySelectorAll(".avatar-opt").forEach(b => b.setAttribute("aria-checked", String(b.dataset.av === id)));
 }
@@ -534,9 +551,14 @@ function applyProfile(user) {
   const first = name.split(/\s+/)[0];
   setText("userName", first); setText("chipName", first); setText("profName", name); setText("profEmail", user.email || "");
   setText("profVerified", user.emailVerified ? "EMAIL TERVERIFIKASI" : "EMAIL BELUM TERVERIFIKASI");
+  const fmt = s => s ? new Date(s).toLocaleString("id-ID", { timeZone: "Asia/Jakarta", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+  setText("profJoined", fmt(user.metadata && user.metadata.creationTime));
+  setText("profLast", fmt(user.metadata && user.metadata.lastSignInTime));
+  const pid = user.providerData && user.providerData[0] ? user.providerData[0].providerId : "";
+  setText("profProvider", pid === "google.com" ? "Google" : pid === "password" ? "Email & password" : (pid || "—"));
   const input = document.getElementById("profNameInput"); if (input) input.value = name;
   const grid = document.getElementById("avatarGrid");
-  if (grid) grid.innerHTML = AVATARS.map(a => '<button type="button" class="avatar-opt" role="radio" aria-checked="false" data-av="' + a.id + '"><span class="av-wrap">' + a.svg + '</span>' + a.name + '</button>').join("");
+  if (grid) grid.innerHTML = AVATARS.map(a => '<button type="button" class="avatar-opt" role="radio" aria-checked="false" data-av="' + a.id + '"><span class="av-wrap">' + a.svg + '</span><span class="av-name">' + a.name + '</span><span class="av-check">✓</span></button>').join("");
   applyAvatar(store.get(avatarKey(user)) || AVATARS[0].id);
 }
 document.getElementById("avatarGrid")?.addEventListener("click", e => {
@@ -544,6 +566,8 @@ document.getElementById("avatarGrid")?.addEventListener("click", e => {
   if (!b || !currentUser) return;
   store.set(avatarKey(currentUser), b.dataset.av);
   applyAvatar(b.dataset.av);
+  const t = document.getElementById("profToast");
+  if (t) { t.textContent = "Ikon diganti: " + (AVATARS.find(x => x.id === b.dataset.av) || {}).name; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1800); }
 });
 function profMessage(text, type) { const el = document.getElementById("profMsg"); if (el) { el.textContent = text; el.className = "message " + type; } }
 document.getElementById("profileForm")?.addEventListener("submit", async e => {
@@ -573,6 +597,7 @@ function startDashboard() {
   initMap();
   const savedNav = store.get(NAV_KEY);
   setNavCollapsed(savedNav === null ? window.innerWidth <= 700 : savedNav === "1", false);
+  setView(false);
   if (location.hash.length > 1) setTimeout(() => showPage(location.hash.slice(1), false), 350);
   spyScroll();
   timer = setInterval(() => { tickClock(); if (!paused) addSample(); }, 1000);
